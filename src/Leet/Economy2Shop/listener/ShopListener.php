@@ -379,6 +379,9 @@ class ShopListener implements Listener {
 
         $line2 = explode(' ', $sign->getText()[1]);
 
+        # Workaround for signs somehow created when invalid...
+        if(count($line2) !== 2) return false;
+
         $type = strtoupper($line2[0]);
         $quantity = $line2[1];
 
