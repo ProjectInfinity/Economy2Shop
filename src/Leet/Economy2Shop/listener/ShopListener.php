@@ -150,7 +150,7 @@ class ShopListener implements Listener {
         #var_dump(number_format($price, 2));
         $event->setLine(2, number_format($price, 2).' '.$currency);
         # Set item info.
-        $event->setLine(3, $item->getName());
+        $event->setLine(3, $item->getId().':'.$item->getDamage());
 
         $event->getPlayer()->sendMessage(TextFormat::GREEN.'Shop created!');
 
