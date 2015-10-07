@@ -251,7 +251,10 @@ class ShopListener implements Listener {
         }
 
         # Do not handle the event if the shop owner is clicking the sign.
-        if($isPlayerShop and strtoupper($name) === strtoupper($event->getPlayer()->getName())) return;
+        if($isPlayerShop and strtoupper($name) === strtoupper($event->getPlayer()->getName())) {
+            $event->getPlayer()->sendMessage(TextFormat::RED.'You cannot interact with your own shop.');
+            return;
+        }
 
         $item = $tile->getText()[3];
 
