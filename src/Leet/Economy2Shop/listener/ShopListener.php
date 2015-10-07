@@ -6,6 +6,7 @@ use Leet\Economy2\Economy2;
 use Leet\Economy2Shop\Economy2Shop;
 use pocketmine\block\Block;
 use pocketmine\event\block\BlockBreakEvent;
+use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
@@ -360,6 +361,28 @@ class ShopListener implements Listener {
                 ($price > 1 ? $this->money->getPluralName() : $this->money->getSingularName()));
 
         }
+
+    }
+
+    public function onBlockPlace(BlockPlaceEvent $event) {
+
+        # We only want to continue if the blockAgainst is a sign.
+        if(!($event->getBlock()->getLevel()->getTile(new Vector3(
+            $event->getBlockAgainst()->x,
+            $event->getBlockAgainst()->y,
+            $event->getBlockAgainst()->z
+        )) instanceof Sign)) return;
+
+        /** @var Sign $tile */
+        $tile = $event->getBlock()->getLevel()->getTile(new Vector3(
+            $event->getBlockAgainst()->x,
+            $event->getBlockAgainst()->y,
+            $event->getBlockAgainst()->z
+        ));
+
+        if(!$this->isShopSign($tile->getText())) return;
+
+        $event->setCancelled(true);
 
     }
 
