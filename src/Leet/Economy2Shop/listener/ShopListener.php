@@ -43,7 +43,14 @@ class ShopListener implements Listener {
         }
 
         # Stop processing if the sign is not a shop.
-        if(!$isShop) return;
+        if(!$isShop) {
+            # Check if a user is trying to exploit the system.
+            if($this->isShopSign($event->getLines())) {
+                $event->getPlayer()->sendMessage(TextFormat::RED.'Create a shop by putting [shop] or [adminshop] at the beginning of the sign.');
+                $this->breakSign($event->getBlock());
+            }
+            return;
+        }
 
         if($isAdminShop) {
             if(!$event->getPlayer()->hasPermission('economy2shop.admin.create')) {
@@ -121,16 +128,6 @@ class ShopListener implements Listener {
             $event->getPlayer()->sendMessage(TextFormat::RED.'Invalid item.');
             return;
         }
-        /*if(is_numeric($item)) {
-            $item = Item::get(intval($item));
-        } else {
-            if(count(explode(':', $item)) > 1) {
-                $itemData = explode(':', $item);
-                $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
-            } else {
-                $item = Item::fromString($item);
-            }
-        }*/
 
         if($item->getName() === 'Unknown' or $item->getName() === 'Air') {
             $event->getPlayer()->sendMessage(TextFormat::RED.'The fourth line defines the item and has to be a valid item ID.');
@@ -186,7 +183,7 @@ class ShopListener implements Listener {
         }
 
         # Stop processing if the sign is not a shop sign.
-        if(!$this->isShopSign($tile)) return;
+        if(!$this->isShopSign($tile->getText())) return;
 
         # Check if the player can destroy admin shops.
         if(strtoupper($tile->getText()[0]) === '[Admin Shop]' and !$event->getPlayer()->hasPermission('economy2shop.admin.destroy')) {
@@ -239,7 +236,7 @@ class ShopListener implements Listener {
         }
 
         # Stop processing if the sign is not a shop sign.
-        if(!$this->isShopSign($tile)) return;
+        if(!$this->isShopSign($tile->getText())) return;
 
         $name = explode(' ', $tile->getText()[0]);
         $isPlayerShop = false;
@@ -375,12 +372,12 @@ class ShopListener implements Listener {
         ), new Item(323));
     }
 
-    private function isShopSign(Sign $sign) {
+    private function isShopSign($sign) {
 
-        if($sign->getText()[0] === '' or $sign->getText()[1] === ''
-            or $sign->getText()[2] === '' or $sign->getText()[3] === '') return false;
+        if($sign[0] === '' or $sign[1] === ''
+            or $sign[2] === '' or $sign[3] === '') return false;
 
-        $line2 = explode(' ', $sign->getText()[1]);
+        $line2 = explode(' ', $sign[1]);
 
         # Workaround for signs somehow created when invalid...
         if(count($line2) !== 2) return false;
@@ -398,7 +395,7 @@ class ShopListener implements Listener {
 
         if($quantity < 1) return false;
 
-        $price = explode(' ', $sign->getText()[2])[0];
+        $price = explode(' ', $sign[2])[0];
 
         if(!is_numeric($price)) return false;
 
@@ -406,15 +403,18 @@ class ShopListener implements Listener {
 
         if($price < 0.1) return false;
 
-        $item = $sign->getText()[3];
+        $item = $sign[3];
 
         if(is_numeric($item)) {
-            $item = Item::get(intval($item));
+            $item = Item::get(intval($item), 0, $quantity);
+        } elseif(count(explode(':', $item)) > 1) {
+            $itemData = explode(':', $item);
+            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
         } else {
-            $item = Item::fromString($item);
+            return false;
         }
 
-        if($item->getName() === 'Unknown') return false;
+        if($item->getName() === 'Unknown' or $item->getName() === 'Air') return false;
 
         return true;
     }
