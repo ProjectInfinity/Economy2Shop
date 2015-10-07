@@ -266,7 +266,7 @@ class ShopListener implements Listener {
             $item = Item::get(intval($item), 0, $quantity);
         } elseif(count(explode(':', $item)) > 1) {
             $itemData = explode(':', $item);
-            $item = Item::get(intval($itemData[0]), intval($itemData[2]), $quantity);
+            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
         } else {
             $event->getPlayer()->sendMessage(TextFormat::RED.'Invalid item.');
             return;
