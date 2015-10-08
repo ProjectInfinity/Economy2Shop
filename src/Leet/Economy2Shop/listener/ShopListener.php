@@ -3,6 +3,7 @@
 namespace Leet\Economy2Shop\listener;
 
 use Leet\Economy2\Economy2;
+use Leet\Economy2Shop\data\Items;
 use Leet\Economy2Shop\Economy2Shop;
 use pocketmine\block\Block;
 use pocketmine\event\block\BlockBreakEvent;
@@ -123,6 +124,9 @@ class ShopListener implements Listener {
         if(is_numeric($item)) {
             $item = Item::get(intval($item), 0, $quantity);
         } elseif(count(explode(':', $item)) > 1) {
+            $itemData = explode(':', $item);
+            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
+        } elseif(Items::getIdMeta($item) !== null) {
             $itemData = explode(':', $item);
             $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
         } else {

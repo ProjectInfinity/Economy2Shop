@@ -2,6 +2,7 @@
 
 namespace Leet\Economy2Shop\command;
 
+use Leet\Economy2Shop\data\Items;
 use Leet\Economy2Shop\Economy2Shop;
 
 use pocketmine\command\Command;
@@ -69,7 +70,13 @@ class ItemInfoCommand implements CommandExecutor {
 
             $arg = implode(' ', $args);
 
-            $item = Item::fromString($arg);
+            # Check if the user typed /iteminfo itemlistname
+            if(Items::getIdMeta($arg) !== null) {
+                $itemData = explode(':', Items::getIdMeta($arg));
+                $item = Item::get(intval($itemData[0]), intval($itemData[1]));
+            } else {
+                $item = Item::fromString($arg);
+            }
 
             if($item->getName() === 'Air') {
                 $sender->sendMessage(TextFormat::RED.'Found no valid item with that name.');
