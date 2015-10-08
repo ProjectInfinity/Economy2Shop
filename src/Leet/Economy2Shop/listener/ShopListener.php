@@ -127,7 +127,7 @@ class ShopListener implements Listener {
             $itemData = explode(':', $item);
             $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
         } elseif(Items::getIdMeta($item) !== null) {
-            $itemData = explode(':', $item);
+            $itemData = explode(':', Items::getIdMeta($item));
             $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
         } else {
             $event->getPlayer()->sendMessage(TextFormat::RED.'Invalid item.');
@@ -149,10 +149,16 @@ class ShopListener implements Listener {
         # Set SELL/BUY and quantity.
         $event->setLine(1, ($type === 'BUY' ? 'Buy' : 'Sell').' '.$quantity);
         # Set price and currency name.
-        #var_dump(number_format($price, 2));
         $event->setLine(2, number_format($price, 2).' '.$currency);
+
+        $name = Items::getName($item->getId().':'.$item->getDamage());
         # Set item info.
-        $event->setLine(3, $item->getId().':'.$item->getDamage());
+        if($name !== null) {
+            $event->setLine(3, $name);
+        } else {
+            $event->setLine(3, $item->getId().':'.$item->getDamage());
+        }
+
 
         $event->getPlayer()->sendMessage(TextFormat::GREEN.'Shop created!');
 
@@ -276,21 +282,13 @@ class ShopListener implements Listener {
         } elseif(count(explode(':', $item)) > 1) {
             $itemData = explode(':', $item);
             $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
+        } elseif(Items::getIdMeta($item) !== null) {
+            $itemData = explode(':', Items::getIdMeta($item));
+            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
         } else {
             $event->getPlayer()->sendMessage(TextFormat::RED.'Invalid item.');
             return;
         }
-        /*if(is_numeric($item)) {
-            $item = Item::get(intval($item), 0, $quantity);
-        } else {
-            if(count(explode(':', $item)) > 1) {
-                $itemData = explode(':', $item);
-                $item = Item::get(intval($itemData[0]), intval($itemData[2]), $quantity);
-            } else {
-                $item = Item::fromString($item);
-                $item->setCount($quantity);
-            }
-        } */
 
         $price = explode(' ', $tile->getText()[2])[0];
 
@@ -357,7 +355,6 @@ class ShopListener implements Listener {
                 return;
             }
 
-            # TODO: This needs testing.
             $pinv->removeItem($item);
 
             # Perform player shop transaction.
@@ -440,6 +437,9 @@ class ShopListener implements Listener {
             $item = Item::get(intval($item), 0, $quantity);
         } elseif(count(explode(':', $item)) > 1) {
             $itemData = explode(':', $item);
+            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
+        } elseif(Items::getIdMeta($item) !== null) {
+            $itemData = explode(':', Items::getIdMeta($item));
             $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
         } else {
             return false;
