@@ -152,6 +152,10 @@ class ShopListener implements Listener {
 
         $event->getPlayer()->sendMessage(TextFormat::GREEN.'Shop created!');
 
+        if($event->getPlayer()->hasPermission('economy2shop.admin.create') and !$isAdminShop) {
+            $event->getPlayer()->sendMessage(TextFormat::YELLOW.'Did you mean to make a admin shop? Use [adminshop] instead of [shop].');
+        }
+
     }
 
     /**
