@@ -2,8 +2,8 @@
 
 namespace Leet\Economy2Shop\listener;
 
+use Leet\Economy2\data\Items;
 use Leet\Economy2\Economy2;
-use Leet\Economy2Shop\data\Items;
 use Leet\Economy2Shop\Economy2Shop;
 use pocketmine\block\Block;
 use pocketmine\event\block\BlockBreakEvent;
@@ -111,7 +111,11 @@ class ShopListener implements Listener {
             return;
         }
 
-        $price = floatval($price);
+        # Check if number is round.
+        if(intval($price) == $price)
+            $price = intval($price);
+        else
+            $price = floatval($price);
 
         if($price < 0.1) {
             $event->getPlayer()->sendMessage(TextFormat::RED.'The third line defines the price and has to be above 0.');
@@ -134,13 +138,12 @@ class ShopListener implements Listener {
             return;
         }
 
+        # Possible TODO: Remove unknown?
         if($item->getName() === 'Unknown' or $item->getName() === 'Air') {
             $event->getPlayer()->sendMessage(TextFormat::RED.'The fourth line defines the item and has to be a valid item ID.');
             $this->breakSign($event->getBlock());
             return;
         }
-
-        $currency = $price > 1 ? $this->money->getPluralName() : $this->money->getSingularName();
 
         # Seems like all is good! Let's format that sign correctly.
 
@@ -149,7 +152,7 @@ class ShopListener implements Listener {
         # Set SELL/BUY and quantity.
         $event->setLine(1, ($type === 'BUY' ? 'Buy' : 'Sell').' '.$quantity);
         # Set price and currency name.
-        $event->setLine(2, number_format($price, 2).' '.$currency);
+        $event->setLine(2, $this->money->getSymbol().(is_int($price) ? $price : number_format($price, 2)));
 
         $name = Items::getName($item->getId().':'.$item->getDamage());
         # Set item info.
@@ -290,7 +293,7 @@ class ShopListener implements Listener {
             return;
         }
 
-        $price = explode(' ', $tile->getText()[2])[0];
+        $price = trim($tile->getText()[2], $this->money->getSymbol());
 
         $price = floatval($price);
 
@@ -423,11 +426,15 @@ class ShopListener implements Listener {
 
         if($quantity < 1) return false;
 
-        $price = explode(' ', $sign[2])[0];
+        $price = trim($sign[2], $this->money->getSymbol());
 
         if(!is_numeric($price)) return false;
 
-        $price = floatval($price);
+        # Check if number is round.
+        if(intval($price) == $price)
+            $price = intval($price);
+        else
+            $price = floatval($price);
 
         if($price < 0.1) return false;
 
@@ -445,7 +452,8 @@ class ShopListener implements Listener {
             return false;
         }
 
-        if($item->getName() === 'Unknown' or $item->getName() === 'Air') return false;
+        # Removed 'Unknown Item', some items may have unknown item as name?
+        if($item->getName() === 'Air') return false;
 
         return true;
     }
