@@ -19,7 +19,7 @@ class InventoryManager {
      * Gets the inventory by the specified player.
      *
      * @param $player
-     * @return Array|null
+     * @return array|null
      */
     public function getInventory($player) {
         $player = strtolower($player);
@@ -108,15 +108,15 @@ class InventoryManager {
         $exists = isset($items[$key]);
 
         $prev = null;
-        if($exists) $prev = intval($items[$key]);
+        if($exists) $prev = (int) $items[$key];
 
-        $items[$key] = ($exists) ? intval($items[$key]) + $item->getCount() : $item->getCount();
+        $items[$key] = ($exists) ? (int) $items[$key] + $item->getCount() : $item->getCount();
 
         $this->data->setNested('inventory.'.$player, $items);
         $this->data->save();
 
-        if(intval($this->data->getNested('inventory.'.$player)[$key]) === $item->getCount()) return true;
-        if($exists and $prev !== null and intval($this->data->getNested('inventory.'.$player)[$key]) === ($prev + $item->getCount())) return true;
+        if((int) $this->data->getNested('inventory.'.$player)[$key] === $item->getCount()) return true;
+        if($exists and $prev !== null and (int) $this->data->getNested('inventory.'.$player)[$key] === ($prev + $item->getCount())) return true;
 
         return false;
 

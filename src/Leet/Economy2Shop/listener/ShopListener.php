@@ -95,7 +95,7 @@ class ShopListener implements Listener {
             return;
         }
 
-        $quantity = intval($quantity);
+        $quantity = (int) $quantity;
 
         if($quantity < 1) {
             $event->getPlayer()->sendMessage(TextFormat::RED.'The second line quantity has to be 1 or higher.');
@@ -112,10 +112,10 @@ class ShopListener implements Listener {
         }
 
         # Check if number is round.
-        if(intval($price) == $price)
-            $price = intval($price);
+        if((int) $price == $price)
+            $price = (int) $price;
         else
-            $price = floatval($price);
+            $price = (float) $price;
 
         if($price < 0.1) {
             $event->getPlayer()->sendMessage(TextFormat::RED.'The third line defines the price and has to be above 0.');
@@ -126,20 +126,19 @@ class ShopListener implements Listener {
         $item = $event->getLine(3);
 
         if(is_numeric($item)) {
-            $item = Item::get(intval($item), 0, $quantity);
+            $item = Item::get((int) $item, 0, $quantity);
         } elseif(count(explode(':', $item)) > 1) {
             $itemData = explode(':', $item);
-            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
+            $item = Item::get((int) $itemData[0], (int) $itemData[1], $quantity);
         } elseif(Items::getIdMeta($item) !== null) {
             $itemData = explode(':', Items::getIdMeta($item));
-            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
+            $item = Item::get((int) $itemData[0], (int) $itemData[1], $quantity);
         } else {
             $event->getPlayer()->sendMessage(TextFormat::RED.'Invalid item.');
             return;
         }
 
-        # Possible TODO: Remove unknown?
-        if($item->getName() === 'Unknown' or $item->getName() === 'Air') {
+        if($item->getName() === 'Air') {
             $event->getPlayer()->sendMessage(TextFormat::RED.'The fourth line defines the item and has to be a valid item ID.');
             $this->breakSign($event->getBlock());
             return;
@@ -278,16 +277,16 @@ class ShopListener implements Listener {
         $type = strtoupper($line2[0]);
         $quantity = $line2[1];
 
-        $quantity = intval($quantity);
+        $quantity = (int) $quantity;
 
         if(is_numeric($item)) {
-            $item = Item::get(intval($item), 0, $quantity);
+            $item = Item::get((int) $item, 0, $quantity);
         } elseif(count(explode(':', $item)) > 1) {
             $itemData = explode(':', $item);
-            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
+            $item = Item::get((int) $itemData[0], (int) $itemData[1], $quantity);
         } elseif(Items::getIdMeta($item) !== null) {
             $itemData = explode(':', Items::getIdMeta($item));
-            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
+            $item = Item::get((int) $itemData[0], (int) $itemData[1], $quantity);
         } else {
             $event->getPlayer()->sendMessage(TextFormat::RED.'Invalid item.');
             return;
@@ -295,7 +294,7 @@ class ShopListener implements Listener {
 
         $price = trim($tile->getText()[2], $this->money->getSymbol());
 
-        $price = floatval($price);
+        $price = (float) $price;
 
         # Check if the player is buying.
         if($type === 'BUY') {
@@ -422,7 +421,7 @@ class ShopListener implements Listener {
         # Ensure that the second line is the quantity of items.
         if(!is_numeric($quantity)) return false;
 
-        $quantity = intval($quantity);
+        $quantity = (int) $quantity;
 
         if($quantity < 1) return false;
 
@@ -431,23 +430,23 @@ class ShopListener implements Listener {
         if(!is_numeric($price)) return false;
 
         # Check if number is round.
-        if(intval($price) == $price)
-            $price = intval($price);
+        if((int) $price == $price)
+            $price = (int) $price;
         else
-            $price = floatval($price);
+            $price = (float) $price;
 
         if($price < 0.1) return false;
 
         $item = $sign[3];
 
         if(is_numeric($item)) {
-            $item = Item::get(intval($item), 0, $quantity);
+            $item = Item::get((int) $item, 0, $quantity);
         } elseif(count(explode(':', $item)) > 1) {
             $itemData = explode(':', $item);
-            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
+            $item = Item::get((int) $itemData[0], (int) $itemData[1], $quantity);
         } elseif(Items::getIdMeta($item) !== null) {
             $itemData = explode(':', Items::getIdMeta($item));
-            $item = Item::get(intval($itemData[0]), intval($itemData[1]), $quantity);
+            $item = Item::get((int) $itemData[0], (int) $itemData[1], $quantity);
         } else {
             return false;
         }

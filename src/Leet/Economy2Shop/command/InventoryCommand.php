@@ -45,7 +45,7 @@ class InventoryCommand implements CommandExecutor {
                 $i = 1;
                 foreach($inventory as $item => $amount) {
                     $itemData = explode('-', $item);
-                    $realItem = Item::get(intval($itemData[0]), intval($itemData[1]));
+                    $realItem = Item::get((int) $itemData[0], (int) $itemData[1]);
                     $sender->sendMessage(TextFormat::YELLOW.$i.'. '.TextFormat::AQUA.
                         $realItem->getName().TextFormat::GRAY.' ('.$itemData[0].':'.$itemData[1].') '.
                         TextFormat::AQUA.'x'.$amount);
@@ -72,7 +72,7 @@ class InventoryCommand implements CommandExecutor {
                         $sender->sendMessage(TextFormat::RED.'When specifying an amount it has to be a number!');
                         return true;
                     }
-                    $amount = intval($args[1]);
+                    $amount = (int) $args[1];
                     $item->setCount($amount);
                 } else {
                     $amount = $item->getCount();
@@ -136,9 +136,9 @@ class InventoryCommand implements CommandExecutor {
                             return true;
                         }
 
-                        $item = Item::get(intval($data[0]), intval($data[1]), intval($items[$data[0].'-'.$data[1]]));
+                        $item = Item::get((int) $data[0], (int) $data[1], (int) $items[$data[0].'-'.$data[1]]);
 
-                    } elseif(count($data) == 1) {
+                    } elseif(count($data) === 1) {
                         # The line did not contain ':'.
 
                         # The argument may be a item ID without meta.
@@ -151,7 +151,7 @@ class InventoryCommand implements CommandExecutor {
                                 return true;
                             }
 
-                            $item = Item::get(intval($data[0]), 0, intval($items[$args[1].'-'.'0']));
+                            $item = Item::get((int) $data[0], 0, (int) $items[$args[1].'-'.'0']);
 
                         } else {
                             # The argument may be a one-word item.
@@ -189,9 +189,9 @@ class InventoryCommand implements CommandExecutor {
                             return true;
                         }
 
-                        $item = Item::get(intval($data[0]), intval($data[1]), intval($args[2]));
+                        $item = Item::get((int) $data[0], (int) $data[1], (int) $args[2]);
 
-                    } elseif(count($data) == 1) {
+                    } elseif(count($data) === 1) {
                         # The line did not contain ':'.
 
                         # The argument may be a item ID without meta.
@@ -210,7 +210,7 @@ class InventoryCommand implements CommandExecutor {
                                 return true;
                             }
 
-                            $item = Item::get(intval($data[0]), 0, intval($args[2]));
+                            $item = Item::get((int) $data[0], 0, (int) $args[2]);
 
                         } else {
                             # The argument may be a one-word item.

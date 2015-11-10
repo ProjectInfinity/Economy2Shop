@@ -51,7 +51,7 @@ class ItemInfoCommand implements CommandExecutor {
                 return true;
             }
 
-            $item = Item::get(intval($itemData[0], intval($itemData[1])));
+            $item = Item::get((int) $itemData[0], (int) $itemData[1]);
 
             if($item->getName() === 'Air') {
                 $sender->sendMessage(TextFormat::RED.'Either the item ID or meta does not match an item.');
@@ -73,7 +73,7 @@ class ItemInfoCommand implements CommandExecutor {
             # Check if the user typed /iteminfo itemlistname
             if(Items::getIdMeta($arg) !== null) {
                 $itemData = explode(':', Items::getIdMeta($arg));
-                $item = Item::get(intval($itemData[0]), intval($itemData[1]));
+                $item = Item::get((int) $itemData[0], (int) $itemData[1]);
             } else {
                 $item = Item::fromString($arg);
             }
