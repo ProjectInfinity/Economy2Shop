@@ -14,6 +14,8 @@ use pocketmine\utils\TextFormat;
 
 class ItemInfoCommand implements CommandExecutor {
 
+    # TODO: Move this command to Economy2.
+
     private $plugin;
 
     public function __construct(Economy2Shop $plugin) {
@@ -36,6 +38,8 @@ class ItemInfoCommand implements CommandExecutor {
                 return true;
             }
             $sender->sendMessage(TextFormat::YELLOW.'Name: '.TextFormat::AQUA.$hand->getName());
+            $sender->sendMessage(TextFormat::YELLOW.'Known as: '.TextFormat::AQUA.(isset(Items::$items[$hand->getId().':'.$hand->getDamage()]) ?
+                Items::getName($hand->getId().':'.$hand->getDamage()) : 'NOT ADDED YET'));
             $sender->sendMessage(TextFormat::YELLOW.'Id & meta: '.TextFormat::AQUA.$hand->getId().':'.$hand->getDamage());
             $sender->sendMessage(TextFormat::YELLOW.'Count: '.TextFormat::AQUA.$hand->getCount());
             return true;
@@ -59,6 +63,8 @@ class ItemInfoCommand implements CommandExecutor {
             }
 
             $sender->sendMessage(TextFormat::YELLOW.'Name: '.TextFormat::AQUA.$item->getName());
+            $sender->sendMessage(TextFormat::YELLOW.'Known as: '.TextFormat::AQUA.(isset(Items::$items[$item->getId().':'.$item->getDamage()]) ?
+                Items::getName($item->getId().':'.$item->getDamage()) : 'NOT ADDED YET'));
             $sender->sendMessage(TextFormat::YELLOW.'Id & meta: '.TextFormat::AQUA.$item->getId().':'.$item->getDamage());
 
             return true;
@@ -84,6 +90,8 @@ class ItemInfoCommand implements CommandExecutor {
             }
 
             $sender->sendMessage(TextFormat::YELLOW.'Name: '.TextFormat::AQUA.$item->getName());
+            $sender->sendMessage(TextFormat::YELLOW.'Known as: '.TextFormat::AQUA.(isset(Items::$items[$item->getId().':'.$item->getDamage()]) ?
+                Items::getName($item->getId().':'.$item->getDamage()) : 'NOT ADDED YET'));
             $sender->sendMessage(TextFormat::YELLOW.'Id & meta: '.TextFormat::AQUA.$item->getId().':'.$item->getDamage());
 
             return true;
