@@ -11,6 +11,7 @@ use pocketmine\event\block\BlockPlaceEvent;
 use pocketmine\event\block\SignChangeEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerInteractEvent;
+use pocketmine\item\Armor;
 use pocketmine\item\Item;
 use pocketmine\math\Vector3;
 use pocketmine\tile\Sign;
@@ -357,7 +358,12 @@ class ShopListener implements Listener {
                 return;
             }
 
-            $pinv->removeItem($item);
+            if(($item instanceof Armor and !$pinv->getItemInHand() instanceof Armor) or ($item instanceof Armor and $pinv->getItemInHand()->getId() !== $item->getId())) {
+                $event->getPlayer()->sendMessage(TextFormat::RED.'To sell armor you need to hold it in your hand.');
+                return;
+            } else {
+                $pinv->removeItem($item);
+            }
 
             # Perform player shop transaction.
             if($isPlayerShop) $this->money->alterBalance($name, -$price);
