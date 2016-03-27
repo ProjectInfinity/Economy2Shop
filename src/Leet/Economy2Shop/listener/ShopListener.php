@@ -55,21 +55,17 @@ class ShopListener implements Listener {
             return;
         }
 
-        if($isAdminShop) {
-            if(!$event->getPlayer()->hasPermission('economy2shop.admin.create')) {
-                $event->getPlayer()->sendMessage(TextFormat::RED.'You do not have permission to create admin shops.');
-                $this->breakSign($event->getBlock());
-                return;
-            }
+        if($isAdminShop and !$event->getPlayer()->hasPermission('economy2shop.admin.create')) {
+            $event->getPlayer()->sendMessage(TextFormat::RED.'You do not have permission to create admin shops.');
+            $this->breakSign($event->getBlock());
+            return;
         }
 
-        if($isShop and !$isAdminShop) {
-            if(!$event->getPlayer()->hasPermission('economy2shop.create')) {
-                $event->getPlayer()->sendMessage(TextFormat::RED.'You do not have permission to create shops.');
-                $this->breakSign($event->getBlock());
-                $event->setCancelled(true);
-                return;
-            }
+        if($isShop and !$isAdminShop and !$event->getPlayer()->hasPermission('economy2shop.create')) {
+            $event->getPlayer()->sendMessage(TextFormat::RED.'You do not have permission to create shops.');
+            $this->breakSign($event->getBlock());
+            $event->setCancelled(true);
+            return;
         }
 
         $line2 = explode(' ', $event->getLine(1));
@@ -113,7 +109,7 @@ class ShopListener implements Listener {
         }
 
         # Check if number is round.
-        if((int) $price == $price)
+        if((int) $price === $price)
             $price = (int) $price;
         else
             $price = (float) $price;
@@ -436,7 +432,7 @@ class ShopListener implements Listener {
         if(!is_numeric($price)) return false;
 
         # Check if number is round.
-        if((int) $price == $price)
+        if((int) $price === $price)
             $price = (int) $price;
         else
             $price = (float) $price;

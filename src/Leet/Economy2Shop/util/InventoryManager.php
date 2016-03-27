@@ -45,8 +45,8 @@ class InventoryManager {
         foreach($items as $i => $q) {
             $i = explode('-', $i);
             if(count($i) < 2) return false;
-            if($i[0] != $item->getId()) continue;
-            if($i[1] != $item->getDamage()) continue;
+            if($i[0] !== $item->getId()) continue;
+            if($i[1] !== $item->getDamage()) continue;
             if($q >= $quantity) return true;
         }
 
@@ -73,10 +73,10 @@ class InventoryManager {
         foreach($items as $i => $q) {
             $i = explode('-', $i);
             if(count($i) < 2) return false;
-            if($i[0] != $item->getId()) continue;
-            if($i[1] != $item->getDamage()) continue;
+            if($i[0] !== $item->getId()) continue;
+            if($i[1] !== $item->getDamage()) continue;
             if($item->getCount() > $q) return false;
-            if($item->getCount() == $q)
+            if($item->getCount() === $q)
                 unset($items[$item->getId().'-'.$item->getDamage()]);
             else
                 $items[$item->getId().'-'.$item->getDamage()] = $q - $item->getCount();
@@ -110,7 +110,7 @@ class InventoryManager {
         $prev = null;
         if($exists) $prev = (int) $items[$key];
 
-        $items[$key] = ($exists) ? (int) $items[$key] + $item->getCount() : $item->getCount();
+        $items[$key] = $exists ? (int) $items[$key] + $item->getCount() : $item->getCount();
 
         $this->data->setNested('inventory.'.$player, $items);
         $this->data->save();
