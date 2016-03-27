@@ -1,6 +1,6 @@
 name: Economy2Shop
 main: Leet\Economy2Shop\Economy2Shop
-version: 0.1.2
+version: 1.0.0
 api: [2.0.0]
 author: ProjectInfinity
 depend: [Economy2]
