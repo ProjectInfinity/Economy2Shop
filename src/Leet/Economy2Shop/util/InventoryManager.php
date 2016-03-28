@@ -40,7 +40,7 @@ class InventoryManager {
         foreach($this->data->getNested('inventory.'.strtolower($player), []) as $i => $q) {
             $i = explode('-', $i);
             if(count($i) < 2) return false;
-            if($i[0] !== $item->getId() or $i[1] !== $item->getDamage()) continue;
+            if((int) $i[0] !== $item->getId() or (int) $i[1] !== $item->getDamage()) continue;
             if($q >= $quantity) return true;
         }
 

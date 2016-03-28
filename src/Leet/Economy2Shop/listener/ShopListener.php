@@ -308,11 +308,8 @@ class ShopListener implements Listener {
                 return;
             }
 
-            # getDamage = meta, remember to store it.
-            $pinv = $event->getPlayer()->getInventory();
-
             # Check if buyer has enough inventory slots.
-            if(!$pinv->canAddItem($item)) {
+            if(!$event->getPlayer()->getInventory()->canAddItem($item)) {
                 $event->getPlayer()->sendMessage(TextFormat::RED.'You do not have enough inventory slots.');
                 return;
             }
@@ -323,7 +320,7 @@ class ShopListener implements Listener {
                 return;
             }
 
-            $pinv->addItem($item);
+            $event->getPlayer()->getInventory()->addItem($item);
 
             # Perform transactions.
             $this->money->alterBalance($event->getPlayer()->getName(), -$price);
