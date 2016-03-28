@@ -67,7 +67,7 @@ class InventoryManager {
         foreach($items as $i => $q) {
             $i = explode('-', $i);
             if(count($i) < 2) return false;
-            if($i[0] !== $item->getId() or $i[1] !== $item->getDamage()) continue;
+            if((int) $i[0] !== $item->getId() or (int) $i[1] !== $item->getDamage()) continue;
             if($item->getCount() > $q) return false;
             if($item->getCount() === $q)
                 unset($items[$item->getId().'-'.$item->getDamage()]);

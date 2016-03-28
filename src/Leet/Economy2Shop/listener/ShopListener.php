@@ -315,7 +315,7 @@ class ShopListener implements Listener {
             }
 
             # Check if the transaction can continue.
-            if($isPlayerShop and !$this->inventory->remove($event->getPlayer()->getName(), $item)) {
+            if($isPlayerShop and !$this->inventory->remove($name, $item)) {
                 $event->getPlayer()->sendMessage(TextFormat::RED.'Could not complete the transaction.');
                 return;
             }
