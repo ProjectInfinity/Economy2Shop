@@ -37,16 +37,10 @@ class InventoryManager {
      */
     public function has($player, Item $item, $quantity) {
 
-        $player = strtolower($player);
-        $items = $this->data->getNested('inventory.'.$player);
-
-        if($items === null) return false;
-
-        foreach($items as $i => $q) {
+        foreach($this->data->getNested('inventory.'.strtolower($player), []) as $i => $q) {
             $i = explode('-', $i);
             if(count($i) < 2) return false;
-            if($i[0] !== $item->getId()) continue;
-            if($i[1] !== $item->getDamage()) continue;
+            if($i[0] !== $item->getId() or $i[1] !== $item->getDamage()) continue;
             if($q >= $quantity) return true;
         }
 
@@ -73,8 +67,7 @@ class InventoryManager {
         foreach($items as $i => $q) {
             $i = explode('-', $i);
             if(count($i) < 2) return false;
-            if($i[0] !== $item->getId()) continue;
-            if($i[1] !== $item->getDamage()) continue;
+            if($i[0] !== $item->getId() or $i[1] !== $item->getDamage()) continue;
             if($item->getCount() > $q) return false;
             if($item->getCount() === $q)
                 unset($items[$item->getId().'-'.$item->getDamage()]);
@@ -101,8 +94,7 @@ class InventoryManager {
     public function add($player, Item $item) {
         $player = strtolower($player);
 
-        $items = $this->data->getNested('inventory.'.$player);
-        if($items === null) $items = [];
+        $items = $this->data->getNested('inventory.'.$player, []);
 
         $key = $item->getId().'-'.$item->getDamage();
         $exists = isset($items[$key]);
