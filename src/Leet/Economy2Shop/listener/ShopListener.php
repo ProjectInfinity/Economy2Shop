@@ -108,8 +108,8 @@ class ShopListener implements Listener {
             return;
         }
 
-        # Check if number is round.
-        if((int) $price === $price)
+        # Check if number is round. PS: Do not strengthen type checking here.
+        if((int) $price == $price)
             $price = (int) $price;
         else
             $price = (float) $price;
