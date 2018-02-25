@@ -1,8 +1,8 @@
 <?php
 
-namespace Leet\Economy2Shop\util;
+namespace ProjectInfinity\Economy2Shop\util;
 
-use Leet\Economy2Shop\Economy2Shop;
+use ProjectInfinity\Economy2Shop\Economy2Shop;
 use pocketmine\item\Item;
 use pocketmine\utils\Config;
 

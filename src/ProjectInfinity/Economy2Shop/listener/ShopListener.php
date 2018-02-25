@@ -1,10 +1,10 @@
 <?php
 
-namespace Leet\Economy2Shop\listener;
+namespace ProjectInfinity\Economy2Shop\listener;
 
-use Leet\Economy2\data\Items;
-use Leet\Economy2\Economy2;
-use Leet\Economy2Shop\Economy2Shop;
+use ProjectInfinity\Economy2\data\Items;
+use ProjectInfinity\Economy2\Economy2;
+use ProjectInfinity\Economy2Shop\Economy2Shop;
 use pocketmine\block\Block;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\block\BlockPlaceEvent;

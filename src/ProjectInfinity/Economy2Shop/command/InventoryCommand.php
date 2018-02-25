@@ -1,8 +1,8 @@
 <?php
 
-namespace Leet\Economy2Shop\command;
+namespace ProjectInfinity\Economy2Shop\command;
 
-use Leet\Economy2Shop\Economy2Shop;
+use ProjectInfinity\Economy2Shop\Economy2Shop;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Leet\Economy2Shop;
+namespace ProjectInfinity\Economy2Shop;
 
-use Leet\Economy2Shop\command\InventoryCommand;
-use Leet\Economy2Shop\command\ItemInfoCommand;
-use Leet\Economy2Shop\listener\ShopListener;
-use Leet\Economy2Shop\util\InventoryManager;
+use ProjectInfinity\Economy2Shop\command\InventoryCommand;
+use ProjectInfinity\Economy2Shop\command\ItemInfoCommand;
+use ProjectInfinity\Economy2Shop\listener\ShopListener;
+use ProjectInfinity\Economy2Shop\util\InventoryManager;
 use pocketmine\plugin\PluginBase;
 
 class Economy2Shop extends PluginBase {
