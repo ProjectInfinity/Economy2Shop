@@ -3,23 +3,26 @@
 namespace ProjectInfinity\Economy2Shop\command;
 
 use ProjectInfinity\Economy2Shop\Economy2Shop;
+
+use pocketmine\plugin\Plugin;
 use pocketmine\command\Command;
-use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class InventoryCommand implements CommandExecutor {
+class InventoryCommand extends Command implements PluginIdentifiableCommand {
 
     private $plugin, $inventory;
 
     public function __construct(Economy2Shop $plugin) {
+        parent::__construct('inventory', 'Manages your shop inventory','/inventory [action]', ['inv']);
         $this->plugin = $plugin;
         $this->inventory = $plugin->getInventoryManager();
     }
 
-    public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
+    public function execute(CommandSender $sender, string $commandLabel, array $args) {
 
         if(!$sender->hasPermission('economy2shop.command.inventory')) {
             $sender->sendMessage(TextFormat::RED.'You do not have permission to do that.');
@@ -260,5 +263,12 @@ class InventoryCommand implements CommandExecutor {
 
         return true;
 
+    }
+
+    /**
+     * @return Plugin
+     */
+    public function getPlugin(): Plugin {
+        return $this->plugin;
     }
 }

@@ -2,27 +2,29 @@
 
 namespace ProjectInfinity\Economy2Shop\command;
 
+use pocketmine\plugin\Plugin;
 use ProjectInfinity\Economy2\data\Items;
 use ProjectInfinity\Economy2Shop\Economy2Shop;
 
 use pocketmine\command\Command;
-use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
+use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
-class ItemInfoCommand implements CommandExecutor {
+class ItemInfoCommand extends Command implements PluginIdentifiableCommand {
 
     # TODO: Move this command to Economy2.
 
     private $plugin;
 
     public function __construct(Economy2Shop $plugin) {
+        parent::__construct('iteminfo', 'Shows info about an item','/iteminfo [id:meta]', ['ii']);
         $this->plugin = $plugin;
     }
 
-    public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
+    public function execute(CommandSender $sender, string $commandLabel, array $args) {
 
         if(!$sender->hasPermission('economy2shop.command.iteminfo')) {
             $sender->sendMessage(TextFormat::RED.'You do not have permission to use that command.');
@@ -102,5 +104,12 @@ class ItemInfoCommand implements CommandExecutor {
 
         return true;
 
+    }
+
+    /**
+     * @return Plugin
+     */
+    public function getPlugin(): Plugin {
+        return $this->plugin;
     }
 }

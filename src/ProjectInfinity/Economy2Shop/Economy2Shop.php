@@ -31,8 +31,8 @@ class Economy2Shop extends PluginBase {
         }
 
         # Register commands.
-        $this->getCommand('iteminfo')->setExecutor(new ItemInfoCommand($this));
-        $this->getCommand('inventory')->setExecutor(new InventoryCommand($this));
+        $this->getServer()->getCommandMap()->register('iteminfo', new ItemInfoCommand($this));
+        $this->getServer()->getCommandMap()->register('inventory', new InventoryCommand($this));
 
         # Register event listeners.
         $this->getServer()->getPluginManager()->registerEvents(new ShopListener($this), $this);
