@@ -19,12 +19,13 @@ use pocketmine\utils\TextFormat;
 
 class ShopListener implements Listener {
 
-    private $plugin, $money, $inventory;
+    private $plugin, $money, $inventory, $limits;
 
     public function __construct(Economy2Shop $plugin) {
         $this->plugin = $plugin;
         $this->money = Economy2::getPlugin()->getMoneyHandler();
         $this->inventory = $plugin->getInventoryManager();
+        $this->limits = [];
     }
 
     /**
@@ -75,7 +76,7 @@ class ShopListener implements Listener {
 
         $line2 = explode(' ', $event->getLine(1));
 
-        if(count($line2) !== 2) {
+        if(\count($line2) !== 2) {
             $event->getPlayer()->sendMessage(TextFormat::RED.'Invalid format on second line. Format: Sell 15 or Buy 15');
             $this->breakSign($event->getBlock());
             return;
@@ -84,7 +85,7 @@ class ShopListener implements Listener {
         $type = strtoupper($line2[0]);
         $quantity = $line2[1];
 
-        if($type !== 'BUY' AND $type !== 'SELL') {
+        if($type !== 'BUY' && $type !== 'SELL') {
             $event->getPlayer()->sendMessage(TextFormat::RED.'Invalid format on second line. Format: Sell 15 or Buy 15');
             $this->breakSign($event->getBlock());
             return;
@@ -129,7 +130,7 @@ class ShopListener implements Listener {
 
         if(is_numeric($item)) {
             $item = Item::get((int) $item, 0, $quantity);
-        } elseif(count(explode(':', $item)) > 1) {
+        } elseif(\count(explode(':', $item)) > 1) {
             $itemData = explode(':', $item);
             $item = Item::get((int) $itemData[0], (int) $itemData[1], $quantity);
         } elseif(Items::getIdMeta($item) !== null) {
@@ -301,6 +302,8 @@ class ShopListener implements Listener {
         # Check if the player is buying.
         if($type === 'BUY') {
 
+            if($this->isRateLimited($event->getPlayer()->getName())) return;
+
             # Check if player has enough stock.
             if($isPlayerShop && !$this->inventory->has($name, $item, $quantity)) {
                 $event->getPlayer()->sendMessage(TextFormat::RED.$name.' is out of '.$item->getName());
@@ -341,6 +344,8 @@ class ShopListener implements Listener {
 
         # Check if the player is selling.
         if($type === 'SELL') {
+
+            if($this->isRateLimited($event->getPlayer()->getName())) return;
 
             # Check if the shop owner has enough money.
             if($isPlayerShop && $this->money->getBalance($name) < $price) {
@@ -459,6 +464,16 @@ class ShopListener implements Listener {
         if($item->getName() === 'Air') return false;
 
         return true;
+    }
+
+    private function isRateLimited($player): bool {
+        if(!isset($this->limits[$player])) {
+            $this->limits[$player] = microtime(true) * 1000;
+            return false;
+        }
+        if((microtime(true) * 1000) - $this->limits[$player] < 500) return true;
+        $this->limits[$player] = microtime(true) * 1000;
+        return false;
     }
 
 }
