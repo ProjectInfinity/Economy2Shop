@@ -182,7 +182,7 @@ class ShopListener implements Listener {
     public function onBlockBreak(BlockBreakEvent $event) {
 
         # We only want to continue if the block in question is a Sign Post or Wall Sign.
-        if($event->getBlock()->getId() !== 63 and $event->getBlock()->getId() !== 68) return;
+        if($event->getBlock()->getId() !== 63 && $event->getBlock()->getId() !== 68) return;
 
         $tile = $event->getBlock()->getLevel()->getTile(new Vector3(
                 $event->getBlock()->getX(),
@@ -205,7 +205,7 @@ class ShopListener implements Listener {
         if(!$this->isShopSign($tile->getText())) return;
 
         # Check if the player can destroy admin shops.
-        if(strtoupper($tile->getText()[0]) === '[Admin Shop]' and !$event->getPlayer()->hasPermission('economy2shop.admin.destroy')) {
+        if(strtoupper($tile->getText()[0]) === '[Admin Shop]' && !$event->getPlayer()->hasPermission('economy2shop.admin.destroy')) {
             $event->getPlayer()->sendMessage(TextFormat::RED.'You do not have permission to destroy admin shops!');
             $event->setCancelled(true);
             return;
@@ -218,7 +218,7 @@ class ShopListener implements Listener {
             return;
         }
 
-        if(strtoupper($tile->getText()[0]) !== strtoupper($event->getPlayer()->getName()) and
+        if(strtoupper($tile->getText()[0]) !== strtoupper($event->getPlayer()->getName()) &&
             strtoupper($tile->getText()[0]) === '[Admin Shop]') {
             $event->getPlayer()->sendMessage(TextFormat::RED.'You can only destroy shops you own.');
             $event->setCancelled(true);
@@ -235,7 +235,7 @@ class ShopListener implements Listener {
     public function onPlayerInteract(PlayerInteractEvent $event) {
 
         # We only want to continue if the block in question is a Sign Post or Wall Sign.
-        if($event->getBlock()->getId() !== 63 and $event->getBlock()->getId() !== 68) return;
+        if($event->getBlock()->getId() !== 63 && $event->getBlock()->getId() !== 68) return;
 
         $tile = $event->getBlock()->getLevel()->getTile(new Vector3(
                 $event->getBlock()->getX(),
@@ -261,13 +261,13 @@ class ShopListener implements Listener {
         $isPlayerShop = false;
 
         # Check if there's more than one word on the first line or not.
-        if(count($name) === 1) {
+        if(\count($name) === 1) {
             $isPlayerShop = true;
             $name = $name[0];
         }
 
         # Do not handle the event if the shop owner is clicking the sign.
-        if($isPlayerShop and strtoupper($name) === strtoupper($event->getPlayer()->getName())) {
+        if($isPlayerShop && strtoupper($name) === strtoupper($event->getPlayer()->getName())) {
             $event->getPlayer()->sendMessage(TextFormat::RED.'You cannot interact with your own shop.');
             return;
         }
@@ -302,7 +302,7 @@ class ShopListener implements Listener {
         if($type === 'BUY') {
 
             # Check if player has enough stock.
-            if($isPlayerShop and !$this->inventory->has($name, $item, $quantity)) {
+            if($isPlayerShop && !$this->inventory->has($name, $item, $quantity)) {
                 $event->getPlayer()->sendMessage(TextFormat::RED.$name.' is out of '.$item->getName());
                 return;
             }
@@ -320,7 +320,7 @@ class ShopListener implements Listener {
             }
 
             # Check if the transaction can continue.
-            if($isPlayerShop and !$this->inventory->remove($name, $item)) {
+            if($isPlayerShop && !$this->inventory->remove($name, $item)) {
                 $event->getPlayer()->sendMessage(TextFormat::RED.'Could not complete the transaction.');
                 return;
             }
@@ -343,7 +343,7 @@ class ShopListener implements Listener {
         if($type === 'SELL') {
 
             # Check if the shop owner has enough money.
-            if($isPlayerShop and $this->money->getBalance($name) < $price) {
+            if($isPlayerShop && $this->money->getBalance($name) < $price) {
                 $event->getPlayer()->sendMessage(TextFormat::RED.'The shop owner does not have enough money to complete the transaction!');
                 return;
             }
@@ -356,12 +356,12 @@ class ShopListener implements Listener {
                 return;
             }
 
-            if(($item instanceof Armor and !$pinv->getItemInHand() instanceof Armor) or ($item instanceof Armor and $pinv->getItemInHand()->getId() !== $item->getId())) {
+            if(($item instanceof Armor && !$pinv->getItemInHand() instanceof Armor) || ($item instanceof Armor && $pinv->getItemInHand()->getId() !== $item->getId())) {
                 $event->getPlayer()->sendMessage(TextFormat::RED.'To sell armor you need to hold it in your hand.');
                 return;
-            } else {
-                $pinv->removeItem($item);
             }
+
+            $pinv->removeItem($item);
 
             # Perform player shop transaction.
             if($isPlayerShop) $this->money->alterBalance($name, -$price);
@@ -408,19 +408,19 @@ class ShopListener implements Listener {
 
     private function isShopSign($sign) {
 
-        if($sign[0] === '' or $sign[1] === ''
-            or $sign[2] === '' or $sign[3] === '') return false;
+        if($sign[0] === '' || $sign[1] === ''
+            || $sign[2] === '' || $sign[3] === '') return false;
 
         $line2 = explode(' ', $sign[1]);
 
         # Workaround for signs somehow created when invalid...
-        if(count($line2) !== 2) return false;
+        if(\count($line2) !== 2) return false;
 
         $type = strtoupper($line2[0]);
         $quantity = $line2[1];
 
         # Make sure the first line is either buy or sell.
-        if($type !== 'BUY' AND $type !== 'SELL') return false;
+        if($type !== 'BUY' && $type !== 'SELL') return false;
 
         # Ensure that the second line is the quantity of items.
         if(!is_numeric($quantity)) return false;
@@ -445,7 +445,7 @@ class ShopListener implements Listener {
 
         if(is_numeric($item)) {
             $item = Item::get((int) $item, 0, $quantity);
-        } elseif(count(explode(':', $item)) > 1) {
+        } elseif(\count(explode(':', $item)) > 1) {
             $itemData = explode(':', $item);
             $item = Item::get((int) $itemData[0], (int) $itemData[1], $quantity);
         } elseif(Items::getIdMeta($item) !== null) {
