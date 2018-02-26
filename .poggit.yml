@@ -1,0 +1,7 @@
+--- # Poggit-CI Manifest. Open the CI at https://github.com/ProjectInfinity/Economy2Shop
+branches:
+- master
+projects:
+  Economy2Shop:
+    path: ""
+...
