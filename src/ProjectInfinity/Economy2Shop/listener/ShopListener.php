@@ -36,11 +36,16 @@ class ShopListener implements Listener {
 
         if($event->isCancelled()) return;
 
+        # Dumb workaround. SignChangeEvents are no longer sent on sign finish.
+        foreach($event->getLines() as $line) {
+            if($line === '') return;
+        }
+
         $isShop = false;
         $isAdminShop = false;
 
         if(strtoupper($event->getLine(0)) === '[SHOP]') $isShop = true;
-        if(strtoupper($event->getLine(0)) === '[ADMIN SHOP]' or strtoupper($event->getLine(0)) === '[ADMINSHOP]') {
+        if(strtoupper($event->getLine(0)) === '[ADMIN SHOP]' || strtoupper($event->getLine(0)) === '[ADMINSHOP]') {
             $isShop = true;
             $isAdminShop = true;
         }
@@ -55,13 +60,13 @@ class ShopListener implements Listener {
             return;
         }
 
-        if($isAdminShop and !$event->getPlayer()->hasPermission('economy2shop.admin.create')) {
+        if($isAdminShop && !$event->getPlayer()->hasPermission('economy2shop.admin.create')) {
             $event->getPlayer()->sendMessage(TextFormat::RED.'You do not have permission to create admin shops.');
             $this->breakSign($event->getBlock());
             return;
         }
 
-        if($isShop and !$isAdminShop and !$event->getPlayer()->hasPermission('economy2shop.create')) {
+        if($isShop && !$isAdminShop && !$event->getPlayer()->hasPermission('economy2shop.create')) {
             $event->getPlayer()->sendMessage(TextFormat::RED.'You do not have permission to create shops.');
             $this->breakSign($event->getBlock());
             $event->setCancelled(true);
