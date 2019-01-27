@@ -1,7 +1,7 @@
 name: Economy2Shop
 main: ProjectInfinity\Economy2Shop\Economy2Shop
 version: 1.1.0
-api: [3.0.0-ALPHA6, 3.0.0-ALPHA7, 3.0.0-ALPHA8, 3.0.0-ALPHA9, 3.0.0-ALPHA10, 3.0.0-ALPHA11]
+api: [3.0.0]
 author: ProjectInfinity
 depend: [Economy2]
 commands:
